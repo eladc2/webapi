@@ -1,0 +1,90 @@
+﻿@{
+    ViewBag.Title = "Bookmarks";
+}
+
+<div class="jumbotron">
+    <h1>Bookmarks</h1>
+   
+</div>
+
+<div class="row">
+  
+
+    <div id="root1" ng-app="myBookmarkList" ng-controller="myCtrl">
+
+
+
+        <ul id="ul0">
+            
+            <li ng-repeat="x in repositories">
+                <span>{{x.Name}}</span>
+                <img src="{{x.imagePath}}" />
+                
+            </li>
+        </ul>
+       
+    </div>
+
+    
+</div>
+
+<script>
+   
+    ///get main scope
+    function GetScope() {
+     
+
+        return $("#root1").scope();
+
+        
+    }
+
+    var app = angular.module("myBookmarkList", []);
+    app.controller("myCtrl", function ($scope) {
+       
+        ///when recieving repositories - show them
+        $scope.$on("INTER_WINDOW_DATA_TRANSFER", function (data, args) {
+            
+
+            $scope.repositories.length = 0;
+            $("#ul0").show();
+
+            var maxSize = args.someData.length;
+
+            if (maxSize > 20) maxSize = 20;
+
+            for (var i = 0; i < maxSize; i++) {
+
+                
+                if (args.someData[i].booked) {
+                    var newItem = { Name: args.someData[i].name, imagePath: args.someData[i].imagePath, booked: args.someData[i].booked };
+                    $scope.repositories.push(newItem);
+
+                    
+                }
+               
+            }
+
+            $scope.$apply();
+        });
+
+        $scope.repositories = [
+            { Name: '', imagePath: '../Content/pixel.png' }
+        ]
+
+
+    });
+
+    //////////////
+
+
+    $(document).ready(function () {
+        $("#ul0").hide();
+        
+        window.opener.BroadcastBookmarks();
+
+    });
+
+        
+
+</script>

@@ -1,0 +1,5 @@
+C:\Users\Core\source\repos\WpfApp1\WpfControlLibrary1\obj\Debug\WpfControlLibrary1.csprojResolveAssemblyReference.cache
+C:\Users\Core\source\repos\WpfApp1\WpfControlLibrary1\obj\Debug\WpfControlLibrary1.g.resources
+C:\Users\Core\source\repos\WpfApp1\WpfControlLibrary1\obj\Debug\WpfControlLibrary1.Properties.Resources.resources
+C:\Users\Core\source\repos\WpfApp1\WpfControlLibrary1\obj\Debug\WpfControlLibrary1.csproj.GenerateResource.Cache
+C:\Users\Core\source\repos\WpfApp1\WpfControlLibrary1\obj\Debug\WpfControlLibrary1.csproj.CoreCompileInputs.cache

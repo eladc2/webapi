@@ -1,0 +1,406 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="jumbotron">
+    @*<h1>ASP.NET</h1>
+    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
+    <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>*@
+</div>
+
+<div class="row">
+    @*<div class="col-md-4">
+        <h2>Getting started</h2>
+        <p>
+            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
+            enables a clean separation of concerns and gives you full control over markup
+            for enjoyable, agile development.
+        </p>
+        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
+    </div>
+    <div class="col-md-4">
+        <h2>Get more libraries</h2>
+        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
+        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
+    </div>
+    <div class="col-md-4">
+        <h2>Web Hosting</h2>
+        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
+        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
+    </div>*@
+
+
+    <div id="root1" ng-app="myShoppingList" ng-controller="myCtrl">
+
+
+
+        <ul>
+            @*<li ng-repeat="x in products">{{x}}<span ng-click="removeItem($index)">×</span></li>*@
+            <li ng-repeat="x in products">
+                <span>{{x.Name}}</span>
+                <img src="{{x.imagePath}}" />
+                @*<button ng-click="book($index)">book</button>*@
+            </li>
+        </ul>
+        @*<input ng-model="addMe">
+       
+        <button id="btnGet" ng-click="Get()">Get</button>
+
+        <button id="btnGet" ng-click="AllBooks()">AllBooks</button>
+
+        <p>{{errortext}}</p>*@
+    </div>
+
+    @*<p>Try to add the same item twice, and you will get an error message.</p>*@
+</div>
+
+<script>
+    //function onKeydown(event) {
+    //    alert(event);
+
+    //    if (event.key === "Enter") {
+    //        //console.log(event);
+    //        alert(1);
+    //    }
+    //}
+
+    function ggg() {
+        //alert('2');
+
+        //alert($window.angular);//.element("#root0"));
+
+        ///alert($("#root1").scope());
+
+        return $("#root1").scope();
+
+        ///alert(newWindowRef.document.getElementById("root1").scope());
+
+        ///.$broadcast("INTER_WINDOW_DATA_TRANSFER", {someData : "I'm data"});
+    }
+
+    var app = angular.module("myShoppingList", []);
+    app.controller("myCtrl", function ($scope) {
+        //$scope.products = ["Milk", "Bread", "Cheese"];
+
+        //$scope.$watch("addMe", function (newValue, oldValue) {
+        //    /* change noticed */
+        //    alert();
+        //});
+
+        $scope.$on("INTER_WINDOW_DATA_TRANSFER", function (data, args) {
+            //console.log("DATA RECEIVED: " + args.someData);
+            alert(args.someData.length);
+
+
+            for (var i = 0; i < 20; i++) {
+
+                //if (count < 10) {
+
+
+                ///alert(args.someData[i]);
+                if (args.someData[i].booked) {
+                    var ff = { Name: args.someData[i].name, imagePath: args.someData[i].imagePath, booked: args.someData[i].booked };
+                    $scope.products.push(ff);
+
+                    
+                }
+                //}
+
+                ///count += 1;
+            }
+
+            $scope.$apply();
+        });
+
+        $scope.products = [
+            { Name: 'sdfsdf', imagePath: 'Sentence 1' }
+        ]
+
+        $scope.addItem = function () {
+            $scope.errortext = "";
+            if (!$scope.addMe) { return; }
+            if ($scope.products.indexOf($scope.addMe) == -1) {
+                $scope.products.push($scope.addMe);
+                //$scope.products.push('test');
+            } else {
+                $scope.errortext = "The item is already in your shopping list.";
+            }
+        }
+
+        //$scope.addItem2 = function (hh) {
+        //    alert();
+        //    $scope.errortext = "";
+        //    if (!$scope.addMe) { return; }
+        //    if ($scope.products.indexOf(hh) == -1) {
+        //        $scope.products.push(hh);
+        //        //$scope.products.push('test');
+        //    } else {
+        //        $scope.errortext = "The item is already in your shopping list.";
+        //    }
+        //}
+
+        $scope.removeItem = function (x) {
+            $scope.errortext = "";
+            $scope.products.splice(x, 1);
+        }
+
+
+        $scope.AllBooks = function () {
+            var newWindowRef = $window.open("http://localhost:59703/Home/Contact", "New Window", "width=1280,height=890,resizable=1");
+            var newWindowRootScope = newWindowRef.angular.element("#myShoppingList").scope();
+            alert(newWindowRef.angular.element("#myShoppingList"))
+            newWindowRootScope.$broadcast("INTER_WINDOW_DATA_TRANSFER", { someData: "I'm data" });
+        }
+
+        $scope.Get = function () {
+            //alert($scope.addMe);
+
+            if (!$scope.addMe) { return; };
+
+            $.ajax({
+                //url: '@Url.Action("RoleDropDownChanged")',
+                url: 'https://api.github.com/search/repositories?q=' + $scope.addMe,
+                //type: 'POST',
+                type: 'GET',
+                data: { 'roleId': '61AD3FD9-C080-4BB1-8012-2A25309B0AAF' },
+                dataType: 'json',
+                //processData: false,
+                //contentType: 'application/json; charset=utf-8',
+                //success: function (data) { SuccessRoleChangeHandler($scope, data); },
+
+                success: function (data) {
+                    //$scope.products = null;
+                    //$scope.$apply();
+
+                    //for (var i = 0; i < $scope.products.length; i++) {
+                    //    $scope.removeItem(i);
+                    //}
+
+                    $scope.products.length = 0;
+
+                    $scope.$apply();
+
+                    alert($scope.products.length);
+
+                    alert(data.items[0].name)
+                    //alert(data.items[0].owner.avatar_url)
+
+                    //alert(data.items.length)
+                    //data.items.length
+                    var count = 0;
+
+                    for (var i = 0; i < 20; i++) {
+
+                        //if (count < 10) {
+
+                        var ff = { Name: data.items[i].name, imagePath: data.items[i].owner.avatar_url, booked: false };
+                            $scope.products.push(ff);
+                        //}
+
+                        count += 1;
+                    }
+
+                    //$scope.products.push('test1');
+
+
+                    $scope.$apply();
+
+
+                    alert($scope.products.length);
+
+                    //$scope.$apply(function () {
+                    //    //$scope.firstName = ''
+                    //    $scope.products.push('test2');
+                    //}
+                    //)
+                },
+
+                error: OnFailRoleChangeHandler
+            });
+
+
+
+
+            //$scope.errortext = "";
+            //if (!$scope.addMe) { return; }
+            //if ($scope.products.indexOf($scope.addMe) == -1) {
+            //    $scope.products.push($scope.addMe);
+            //    //$scope.products.push('test');
+            //} else {
+            //    $scope.errortext = "The item is already in your shopping list.";
+            //}
+        }
+
+
+        $scope.book = function (x) {
+            $scope.errortext = "";
+            //$scope.products.splice(x, 1);
+
+            $scope.products[x].booked = true;
+
+            //alert($scope.products[x].booked);
+
+
+
+            $.ajax({
+                url: '@Url.Action("AddBook")',
+                //url: 'https://api.github.com/search/repositories?q=' + $scope.addMe,
+                type: 'POST',
+                //type: 'GET',
+                //data: { 'Name': $scope.products[x].Name, 'imagePath': $scope.products[x].imagePath } ,
+                data: { 'obj': $scope.products[x] },
+                dataType: 'json',
+                //processData: false,
+                //contentType: 'application/json; charset=utf-8',
+                //success: function (data) { SuccessRoleChangeHandler($scope, data); },
+
+                success: function (data) {
+                    //$scope.products = null;
+                    //$scope.$apply();
+
+                    //for (var i = 0; i < $scope.products.length; i++) {
+                    //    $scope.removeItem(i);
+                    //}
+
+                    ////////$scope.products.length = 0;
+
+                    ////////$scope.$apply();
+
+                    ////////alert($scope.products.length);
+
+                    ////////alert(data.items[0].name)
+                    //////////alert(data.items[0].owner.avatar_url)
+
+                    //////////alert(data.items.length)
+                    //////////data.items.length
+                    ////////var count = 0;
+
+                    ////////for (var i = 0; i < 20; i++) {
+
+                    ////////    //if (count < 10) {
+
+                    ////////    var ff = { Name: data.items[i].name, imagePath: data.items[i].owner.avatar_url, booked: false };
+                    ////////        $scope.products.push(ff);
+                    ////////    //}
+
+                    ////////    count += 1;
+                    ////////}
+
+                    //////////$scope.products.push('test1');
+
+
+                    ////////$scope.$apply();
+
+
+                    ////////alert($scope.products.length);
+
+                    //$scope.$apply(function () {
+                    //    //$scope.firstName = ''
+                    //    $scope.products.push('test2');
+                    //}
+                    //)
+                },
+
+                error: OnFailRoleChangeHandler
+            });
+
+            //alert($scope.products[0].booked);
+            //alert($scope.products[1].booked);
+
+        }
+
+    });
+
+    //////////////
+
+
+    $(document).ready(function () {
+
+        //alert(window.opener)
+        window.opener.ggg();
+
+
+        //Handle Checks of Actions by RoleName Changed
+        //$('div.RoleAccess select').change(function () {
+        //alert();
+        ///RoleChangeHandler();
+        //});
+
+        document.body.onkeydown = function (e) {
+            //alert(String.fromCharCode(e.keyCode) + " --> " + e.keyCode);
+
+            if (e.keyCode == 13)
+            {
+                ///alert($("#btnGet"));
+                //$scope.Get();
+
+                $("#btnGet").click();
+            }
+        };
+
+
+    });
+
+        function RoleChangeHandler() {
+
+            $.ajax({
+                //url: '@Url.Action("RoleDropDownChanged")',
+                url: 'https://api.github.com/search/repositories?q=a',
+                //type: 'POST',
+                type: 'GET',
+                data: { 'roleId': '61AD3FD9-C080-4BB1-8012-2A25309B0AAF' },
+                dataType: 'json',
+                //processData: false,
+                //contentType: 'application/json; charset=utf-8',
+                //success: function (data) { SuccessRoleChangeHandler(data); },
+
+                success: function (data) {
+                    nnn
+                    //$scope.products.push('test1');
+                    //$scope.$apply()
+
+                    $scope.$apply(function () {
+                        //$scope.firstName = ''
+                        $scope.products.push('test2');
+                    }
+                    )
+                },
+
+                error: OnFailRoleChangeHandler
+            });
+            return false;
+        }
+
+        @*@*function RoleChangeHandler2() {
+
+            $.ajax({
+                //url: '@Url.Action("RoleDropDownChanged")',
+                url: 'https://api.github.com/search/repositories?q=a',
+                //type: 'POST',
+                type: 'GET',
+                data: { 'roleId': '61AD3FD9-C080-4BB1-8012-2A25309B0AAF' },
+                dataType: 'json',
+                //processData: false,
+                //contentType: 'application/json; charset=utf-8',
+                success: function (data) { SuccessRoleChangeHandler(data); },
+                error: OnFailRoleChangeHandler
+            });
+            return false;
+        }*@
+
+
+        function SuccessRoleChangeHandler($scope, data) {
+            //app.$scope.products.push('test');
+            ///app.$scope.addItem2('test');
+            alert(data);
+            ///$scope.products.push('test');
+            alert("in success role change");
+
+        }
+
+        function OnFailRoleChangeHandler(result) {
+            alert('in OnFailRoleChangeHandler');
+
+        }
+
+</script>
